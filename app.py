@@ -112,24 +112,13 @@ def canva():
 </head>
 <body>
     <div>
-        <h1>Image</h1>
+        <h1>Streaming video</h1>
         <img id="img" src="{{ url_for('video_feed') }}">
     </div>
-    <div>
-        <h1>Canvas</h1>
-        <canvas id="canvas" width="640px" height="480px"></canvas>
-    </div>
+
 
 <script >
     var ctx = document.getElementById("canvas").getContext('2d');
-    var img = new Image();
-    img.src = "{{ url_for('video_feed') }}";
-
-    // need only for static image
-    //img.onload = function(){
-    //    ctx.drawImage(img, 0, 0);
-    //};
-
     // need only for animated image
     function refreshCanvas(){
         ctx.drawImage(img, 0, 0);
