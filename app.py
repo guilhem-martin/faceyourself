@@ -83,9 +83,14 @@ def facial():
     return render_template('facial.html')
 
 
+def analyse():
+    print("[INFO] analyse...")
+
+
 def gen():
     print('[INFO] Webcam well started')
     while True:
+      analyse()
       ret, frame = video_capture.read()
       print('[INFO] Video capture read')
       cv2.imwrite('t.jpg', frame)
