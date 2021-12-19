@@ -14,6 +14,24 @@ import PIL.Image
 app = Flask(__name__)
 video_capture = cv2.VideoCapture(0)
 
+# INIT
+print('[INFO] Importing faces...')
+face_to_encode_path = Path('./known_faces')
+files = [file_ for file_ in face_to_encode_path.rglob('*.jpg')]
+for file_ in face_to_encode_path.rglob('*.png'):
+    files.append(file_)
+if len(files)==0:
+    raise ValueError('No faces detect in the directory: {}'.format(face_to_encode_path))
+known_face_names = [os.path.splitext(ntpath.basename(file_))[0] for file_ in files]
+known_face_encodings = []
+for file_ in files:
+    image = PIL.Image.open(file_)
+    image = np.array(image)
+    face_encoded = encode_face(image)[0][0]
+    known_face_encodings.append(face_encoded)
+print('[INFO] Faces well imported')
+# / INIT
+
 # The route() function of the Flask class is a decorator,
 # which tells the application which URL should call
 # the associated function.
@@ -48,24 +66,7 @@ def login():
 
 @app.route('/facial')
 def facial():
-    print('[INFO] Importing faces...')
-    face_to_encode_path = Path('./known_faces')
-    files = [file_ for file_ in face_to_encode_path.rglob('*.jpg')]
 
-    for file_ in face_to_encode_path.rglob('*.png'):
-        files.append(file_)
-    if len(files)==0:
-        raise ValueError('No faces detect in the directory: {}'.format(face_to_encode_path))
-    known_face_names = [os.path.splitext(ntpath.basename(file_))[0] for file_ in files]
-
-    known_face_encodings = []
-    for file_ in files:
-        image = PIL.Image.open(file_)
-        image = np.array(image)
-        face_encoded = encode_face(image)[0][0]
-        known_face_encodings.append(face_encoded)
-
-    print('[INFO] Faces well imported')
     print('[INFO] Starting Webcam...')
     video_capture = cv2.VideoCapture(0)
     print('[INFO] Webcam well started')
@@ -93,6 +94,7 @@ def gen():
       analyse()
       ret, frame = video_capture.read()
       print('[INFO] Video capture read')
+      easy_face_reco(frame, known_face_encodings, known_face_names)
       cv2.imwrite('t.jpg', frame)
       print('[INFO] File written')
       yield (b'--frame\r\n'
