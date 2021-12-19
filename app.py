@@ -4,7 +4,7 @@ import ntpath
 import os
 from pathlib import Path
 import cv2
-from flask import Flask, redirect, url_for, request, render_template
+from flask import Flask, redirect, url_for, request, render_template, render_template_string, Response
 import numpy as np
 from easy_facial_recognition import easy_face_reco, encode_face
 import PIL.Image
@@ -12,6 +12,7 @@ import PIL.Image
 # Flask constructor takes the name of
 # current module (__name__) as argument.
 app = Flask(__name__)
+video_capture = cv2.VideoCapture(0)
 
 # The route() function of the Flask class is a decorator,
 # which tells the application which URL should call
@@ -31,7 +32,7 @@ def hello_name(name):
 @app.route('/success/<name>')
 def success(name):
    return 'welcome %s 👋' % name
- 
+
 @app.route('/login.html')
 def login_html():
     return render_template('login.html')
@@ -82,6 +83,64 @@ def facial():
     return render_template('facial.html')
 
 
+def gen():
+    print('[INFO] Webcam well started')
+    while True:
+      ret, image = video_capture.read()
+      print('[INFO] Video capture read')
+      cv2.imwrite('t.jpg', image)
+      print('[INFO] File written')
+      yield (b'--frame\r\n'
+           b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
+    video_capture.release()
+
+@app.route('/video_feed')
+def video_feed():
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(gen(),
+                mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/canva')
+def canva():
+    """Video streaming"""
+    #return render_template('index.html')
+    print('[INFO] Video feed')
+    # Call the gen function to generate the video
+    return render_template_string('''<html>
+<head>
+    <title>Video Streaming </title>
+</head>
+<body>
+    <div>
+        <h1>Image</h1>
+        <img id="img" src="{{ url_for('video_feed') }}">
+    </div>
+    <div>
+        <h1>Canvas</h1>
+        <canvas id="canvas" width="640px" height="480px"></canvas>
+    </div>
+
+<script >
+    var ctx = document.getElementById("canvas").getContext('2d');
+    var img = new Image();
+    img.src = "{{ url_for('video_feed') }}";
+
+    // need only for static image
+    //img.onload = function(){
+    //    ctx.drawImage(img, 0, 0);
+    //};
+
+    // need only for animated image
+    function refreshCanvas(){
+        ctx.drawImage(img, 0, 0);
+    };
+    window.setInterval("refreshCanvas()", 50);
+
+</script>
+
+</body>
+</html>''')
+
 
 app.add_url_rule('/ici', 'g2g', gfg)
 
@@ -90,4 +149,6 @@ if __name__ == '__main__':
 
 	# run() method of Flask class runs the application
 	# on the local development server.
+    gen()
+    print('[INFO] Generation OK')
     app.run(debug = True)
