@@ -86,9 +86,9 @@ def facial():
 def gen():
     print('[INFO] Webcam well started')
     while True:
-      ret, image = video_capture.read()
+      ret, frame = video_capture.read()
       print('[INFO] Video capture read')
-      cv2.imwrite('t.jpg', image)
+      cv2.imwrite('t.jpg', frame)
       print('[INFO] File written')
       yield (b'--frame\r\n'
            b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
