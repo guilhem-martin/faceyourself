@@ -39,24 +39,12 @@ print('[INFO] Faces well imported')
 # The route() function of the Flask class is a decorator,
 # which tells the application which URL should call
 # the associated function.
-@app.route('/')
-# ‘/’ URL is bound with hello_world() function.
-def hello_world():
-	return 'Hello World'
-
-def gfg():
-    return 'geeksforgeeks'
-
-@app.route('/hello/<name>')
-def hello_name(name):
-   return '👋 Hello %s!' % name
-
 @app.route('/success/<name>')
 def success(name):
-   return 'welcome %s 👋' % name
+   return 'welcome %s 👋 <br><br><a href="/canva">Click to go to face detection</a>!<br>' % name
 
 @app.route('/add_known_faces.html')
-def login_html():
+def add_known_faces():
     return render_template('add_known_faces.html')
 
 @app.route('/upload_known_faces',methods = ['POST'])
@@ -142,7 +130,6 @@ def canva():
 </html>''')
 
 
-app.add_url_rule('/ici', 'g2g', gfg)
 
 # main driver function
 if __name__ == '__main__':
