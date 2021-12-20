@@ -15,32 +15,47 @@ app = Flask(__name__)
 video_capture = cv2.VideoCapture(0)
 
 # INIT
-#def import_faces():
-print('[INFO] Importing faces...')
-face_to_encode_path = Path('./known_faces')
-files = [file_ for file_ in face_to_encode_path.rglob('*.jpg')]
-for file_ in face_to_encode_path.rglob('*.png'):
+# def import_faces():
+
+
+def get_known_face_names():
+  print('[INFO] Importing faces...')
+  face_to_encode_path = Path('./known_faces')
+  files = [file_ for file_ in face_to_encode_path.rglob('*.jpg')]
+  for file_ in face_to_encode_path.rglob('*.png'):
     files.append(file_)
-if len(files)==0:
+  if len(files)==0:
     raise ValueError('No faces detect in the directory: {}'.format(face_to_encode_path))
-known_face_names = [os.path.splitext(ntpath.basename(file_))[0] for file_ in files]
-known_face_encodings = []
-for file_ in files:
-    image = PIL.Image.open(file_)
-    image = np.array(image)
-    try:
-      face_encoded = encode_face(image)[0][0]
-    except IndexError:
-      print('[ERROR] No face detected in {}'.format(file_))
-      continue
-    known_face_encodings.append(face_encoded)
-print('[INFO] Faces well imported')
-#return known_face_names, known_face_encodings
+  return [os.path.splitext(ntpath.basename(file_))[0] for file_ in files], files
+
+def get_known_face_encodings(files):
+  known_face_encodings = []
+  for file_ in files:
+      image = PIL.Image.open(file_)
+      image = np.array(image)
+      try:
+        face_encoded = encode_face(image)[0][0]
+      except IndexError:
+        print('[ERROR] No face detected in {}'.format(file_))
+        continue
+      known_face_encodings.append(face_encoded)
+  print('[INFO] Faces well imported')
+  return known_face_encodings
+
+
+known_face_names, files = get_known_face_names()
+known_face_encodings = get_known_face_encodings(files)
+#  return known_face_names, known_face_encodings
 # / INIT
+
+
 
 # success of image upload
 @app.route('/success/<name>')
 def success(name):
+   global known_face_names, known_face_encodings
+   known_face_names, files = get_known_face_names()
+   known_face_encodings = get_known_face_encodings(files)
    return 'welcome %s 👋 <br><br><a href="/canva">Click to go to face detection</a>!<br>' % name
 
 @app.route('/')
@@ -61,7 +76,7 @@ def upload_known_faces():
 
 def gen():
     print('[INFO] Webcam well started')
-    #known_face_encodings, known_face_names = import_faces()
+    # known_face_encodings, known_face_names = import_faces()
     while True:
       ret, frame = video_capture.read()
       print('[INFO] Video capture read')
