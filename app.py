@@ -15,6 +15,7 @@ app = Flask(__name__)
 video_capture = cv2.VideoCapture(0)
 
 # INIT
+#def import_faces():
 print('[INFO] Importing faces...')
 face_to_encode_path = Path('./known_faces')
 files = [file_ for file_ in face_to_encode_path.rglob('*.jpg')]
@@ -34,14 +35,17 @@ for file_ in files:
       continue
     known_face_encodings.append(face_encoded)
 print('[INFO] Faces well imported')
+#return known_face_names, known_face_encodings
 # / INIT
 
-# The route() function of the Flask class is a decorator,
-# which tells the application which URL should call
-# the associated function.
+# success of image upload
 @app.route('/success/<name>')
 def success(name):
    return 'welcome %s 👋 <br><br><a href="/canva">Click to go to face detection</a>!<br>' % name
+
+@app.route('/')
+def index():
+    return redirect(url_for('add_known_faces'))
 
 @app.route('/add_known_faces.html')
 def add_known_faces():
@@ -53,37 +57,12 @@ def upload_known_faces():
       user = request.form['nm']
       f = request.files['file']
       f.save(os.path.join('./known_faces', user + '.jpg'))
-      return redirect(url_for('success',name = user))
-
-
-@app.route('/facial')
-def facial():
-
-    print('[INFO] Starting Webcam...')
-    video_capture = cv2.VideoCapture(0)
-    print('[INFO] Webcam well started')
-    print('[INFO] Detecting...')
-    while True:
-        ret, frame = video_capture.read()
-        easy_face_reco(frame, known_face_encodings, known_face_names)
-        cv2.imshow('Easy Facial Recognition App', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    print('[INFO] Stopping System')
-    video_capture.release()
-    cv2.destroyAllWindows()
-
-    return render_template('facial.html')
-
-
-def analyse():
-    print("[INFO] analyse...")
-
+      return redirect(url_for('success', name = user))
 
 def gen():
     print('[INFO] Webcam well started')
+    #known_face_encodings, known_face_names = import_faces()
     while True:
-      analyse()
       ret, frame = video_capture.read()
       print('[INFO] Video capture read')
       easy_face_reco(frame, known_face_encodings, known_face_names)
@@ -114,8 +93,6 @@ def canva():
         <h1>Streaming video</h1>
         <img id="img" src="{{ url_for('video_feed') }}">
     </div>
-
-
 <script >
     var ctx = document.getElementById("canvas").getContext('2d');
     // need only for animated image
@@ -123,12 +100,9 @@ def canva():
         ctx.drawImage(img, 0, 0);
     };
     window.setInterval("refreshCanvas()", 50);
-
 </script>
-
 </body>
 </html>''')
-
 
 
 # main driver function
@@ -136,6 +110,6 @@ if __name__ == '__main__':
 
 	# run() method of Flask class runs the application
 	# on the local development server.
-    gen()
-    print('[INFO] Generation OK')
+    # gen()
+    print('[INFO] Starting')
     app.run(debug = True)
