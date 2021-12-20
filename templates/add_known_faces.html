@@ -1,0 +1,16 @@
+<html>
+<body>
+	<form action = "http://localhost:5000/upload_known_faces" method = "post" enctype="multipart/form-data">
+
+<p>Enter the name of the person:</p>
+<p><input type = "text" name = "nm" /></p>
+
+<!-- Upload faces -->
+<p>Upload the faces of the person (it must be cropped: no ears, no hairs, no neck!)):</p>
+<p><input type = "file" name = "file" accept="image/png, image/jpeg"/></p>
+
+<p><input type = "submit" value = "submit" /></p>
+
+	</form>
+</body>
+</html>

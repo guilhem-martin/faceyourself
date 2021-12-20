@@ -27,7 +27,11 @@ known_face_encodings = []
 for file_ in files:
     image = PIL.Image.open(file_)
     image = np.array(image)
-    face_encoded = encode_face(image)[0][0]
+    try:
+      face_encoded = encode_face(image)[0][0]
+    except IndexError:
+      print('[ERROR] No face detected in {}'.format(file_))
+      continue
     known_face_encodings.append(face_encoded)
 print('[INFO] Faces well imported')
 # / INIT
@@ -51,18 +55,18 @@ def hello_name(name):
 def success(name):
    return 'welcome %s 👋' % name
 
-@app.route('/login.html')
+@app.route('/add_known_faces.html')
 def login_html():
-    return render_template('login.html')
+    return render_template('add_known_faces.html')
 
-@app.route('/login',methods = ['POST', 'GET'])
-def login():
+@app.route('/upload_known_faces',methods = ['POST'])
+def upload_known_faces():
    if request.method == 'POST':
       user = request.form['nm']
+      f = request.files['file']
+      f.save(os.path.join('./known_faces', user + '.jpg'))
       return redirect(url_for('success',name = user))
-   else:
-      user = request.args.get('nm')
-      return redirect(url_for('success',name = user))
+
 
 @app.route('/facial')
 def facial():
