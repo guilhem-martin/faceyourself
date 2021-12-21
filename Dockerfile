@@ -13,3 +13,7 @@ RUN pip install -r requirements.txt
 
 # Run the app
 CMD ["python app.py"]
+
+# Document the exposed app port
+# https://docs.docker.com/engine/reference/builder/#expose
+EXPOSE 5000
