@@ -1,21 +1,15 @@
-FROM ubuntu
+FROM python:3
 
-# Install python3
-RUN apt-get update && apt-get install -y python3
+RUN apt-get update && apt-get install -y cmake
 
-# Install python3-pip
-RUN apt-get update && apt-get install -y python3-pip
+ENV APP_HOME /app
+WORKDIR $APP_HOME
 
 # Copy the app
-COPY . /app
+COPY . $APP_HOME
 
 # Install dependencies
-RUN pip3 install -r /app/requirements.txt
-
-WORKDIR /app
+RUN pip install -r requirements.txt
 
 # Run the app
-CMD ["python3", "app.py"]
-
-
-
+CMD ["python app.py"]
