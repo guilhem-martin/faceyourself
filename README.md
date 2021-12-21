@@ -37,6 +37,8 @@ You need a camera connected to your PC since the program will stream the image o
 
 ## Run
 
+Build on GCP cloudshell: gcloud builds submit --tag gcr.io/my-iva-project/faceyourself
+
 ```
 easy_facial_recognition.py --i known_faces
 ```
@@ -47,7 +49,7 @@ Click on the image below:
 
 ## Authors
 
-* **Anis Ayari** - *Lead Data Scientist* 
+* **Anis Ayari** - *Lead Data Scientist*
 
 ## License
 
@@ -59,3 +61,5 @@ On Windows, you may have to additionnally install:
 - opencv-python
 - CMake
 - Visual Studio and the extension for C++ so that `dlib` installation completes successfully
+
+
