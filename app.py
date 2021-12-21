@@ -79,6 +79,8 @@ def gen():
     # known_face_encodings, known_face_names = import_faces()
     while True:
       ret, frame = video_capture.read()
+      if not ret:
+        raise ValueError('[ERROR] No frame read from the webcam')
       print('[INFO] Video capture read')
       easy_face_reco(frame, known_face_encodings, known_face_names)
       cv2.imwrite('t.jpg', frame)
