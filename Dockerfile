@@ -10,10 +10,12 @@ RUN apt-get update && apt-get install -y python3-pip
 COPY . /app
 
 # Install dependencies
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r /app/requirements.txt
+
+WORKDIR /app
 
 # Run the app
-CMD ["python3", "app/app.py"]
+CMD ["python3", "app.py"]
 
 
 
