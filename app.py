@@ -129,4 +129,4 @@ if __name__ == '__main__':
 	# on the local development server.
     # gen()
     print('[INFO] Starting')
-    app.run(debug = True)
+    app.run(port=80)
