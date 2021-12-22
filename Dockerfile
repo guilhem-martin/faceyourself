@@ -1,6 +1,8 @@
 FROM python:3
 
-RUN apt-get update && apt-get install -y cmake
+RUN apt-get update
+RUN apt-get install -y cmake
+RUN apt-get install -y python3-opencv
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME

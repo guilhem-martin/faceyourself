@@ -39,9 +39,8 @@ You need a camera connected to your PC since the program will stream the image o
 
 Build on GCP cloudshell: gcloud builds submit --tag gcr.io/my-iva-project/faceyourself
 
-```
-easy_facial_recognition.py --i known_faces
-```
+Publish on cloud run: by the GCP GUI
+
 ## Youtube Video explanation (French only)
 Click on the image below:
 
