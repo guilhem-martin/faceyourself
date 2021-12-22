@@ -12,7 +12,7 @@ COPY . $APP_HOME
 RUN pip install -r requirements.txt
 
 # Run the app
-CMD ["python app.py"]
+ENTRYPOINT ["python", "app.py"]
 
 # Document the exposed app port
 # https://docs.docker.com/engine/reference/builder/#expose
@@ -20,4 +20,4 @@ EXPOSE 80
 
 # Health check
 # https://docs.docker.com/engine/reference/builder/#healthcheck
-HEALTHCHECK --interval=5m --timeout=10s --retries=3 CMD curl -f http://localhost:80/
+HEALTHCHECK --interval=55m --timeout=10s --retries=3 CMD curl -f http://localhost:80/
