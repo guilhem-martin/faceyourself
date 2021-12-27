@@ -12,12 +12,9 @@ import PIL.Image
 # Flask constructor takes the name of
 # current module (__name__) as argument.
 app = Flask(__name__)
-video_capture = cv2.VideoCapture(0)
+video_capture = None
 
 # INIT
-# def import_faces():
-
-
 def get_known_face_names():
   print('[INFO] Importing faces...')
   face_to_encode_path = Path('./known_faces')
@@ -53,7 +50,8 @@ known_face_encodings = get_known_face_encodings(files)
 # success of image upload
 @app.route('/success/<name>')
 def success(name):
-   global known_face_names, known_face_encodings
+   global known_face_names, known_face_encodings, video_capture
+   video_capture = cv2.VideoCapture(0)
    known_face_names, files = get_known_face_names()
    known_face_encodings = get_known_face_encodings(files)
    return 'welcome %s 👋 <br><br><a href="/canva">Click to go to face detection</a>!<br>' % name
