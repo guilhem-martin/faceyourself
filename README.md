@@ -37,7 +37,7 @@ You need a camera connected to your PC since the program will stream the image o
 
 ## Run
 
-Build on GCP cloudshell: gcloud builds submit --tag gcr.io/my-iva-project/faceyourself
+Build on GCP cloudshell: gcloud builds submit --tag gcr.io/my-iva-project/faceyourself --timeout 2h
 
 Publish on cloud run: by the GCP GUI
 

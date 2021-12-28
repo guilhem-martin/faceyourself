@@ -14,11 +14,11 @@ COPY . $APP_HOME
 RUN pip install -r requirements.txt
 
 # Run the app
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python", "app.py","--port","8080","timeout","120"]
 
 # Document the exposed app port
 # https://docs.docker.com/engine/reference/builder/#expose
-EXPOSE 80
+EXPOSE 8080
 
 # Health check
 # https://docs.docker.com/engine/reference/builder/#healthcheck
